@@ -1,6 +1,8 @@
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.decomposition import TruncatedSVD
+from sklearn.metrics import f1_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 import numpy as np
 import csv
 
@@ -80,12 +82,12 @@ class JobDescriptionDataset:
 
 
 	def setLabelCooccurrence(self):
+		'''Builds matrix of label coocurrence'''
 		if self.raw_Y is None:
-			raise Exception('no labels for this dataset')
+			raise ValueError('no labels for this dataset')
 		binarizer = MultiLabelBinarizer()
-		label_dt_matrix = binarizer.fit_transform([x.split(" ") for x in self.raw_Y])
-		label_counts = (label_dt_matrix.T * label_dt_matrix).todense()
-		self.label_cooccurrence = label_counts * 1./label_counts.diagonal()
+		label_dt_matrix = binarizer.fit_transform([x.split(" ") for x in self.raw_Y if x != ''])
+		self.label_cooccurrence = np.matmul(label_dt_matrix.T, label_dt_matrix)
 
 
 	def getRawX(self):
@@ -121,6 +123,11 @@ class JobDescriptionDataset:
 
 
 def labelMatrixToString(y):
+	'''Converts binary label matrix to list of label strings
+
+	Args:
+		y (numpy array): binary label matrix
+	'''
 	y_str = list()
 	for row in y:
 		str_pred = list()
@@ -132,6 +139,12 @@ def labelMatrixToString(y):
 
 
 def predStringToFile(pred_str, fn):
+	'''Writes prediction string to file to generate submission file
+	
+	Args:
+		pred_str (list of str): prediction strings
+		fn (str): filename
+	'''
 	with open(fn, "wb") as f:
 		writer = csv.writer(f)
 		writer.writerow(["tags"])
@@ -157,3 +170,13 @@ def prunedProbMatrix(prob_matrix):
 				if prob_matrix[i, j] != max_elem:
 					prob_matrix_pruned[i, j] = 0
 	return prob_matrix_pruned
+
+
+def score(true, pred, return_values = False):
+	p = precision_score(true, pred, average = "micro")
+	r = recall_score(true, pred, average = "micro")
+	f = f1_score(true, pred, average = "micro")
+	if return_values:
+		return (p, r, f)
+	else:
+		return "Precision: %.4f, Recall: %.4f, F1: %.4f" % (p, r, f)
