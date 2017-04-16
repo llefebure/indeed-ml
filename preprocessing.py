@@ -82,8 +82,8 @@ class JobDescriptionDataset:
 	def setLabelCooccurrence(self):
 		if self.raw_Y is None:
 			raise Exception('no labels for this dataset')
-		vect = CountVectorizer(token_pattern = "[0-9a-zA-Z\-]+", binary = True)
-		label_dt_matrix = vect.fit_transform(self.raw_Y)
+		binarizer = MultiLabelBinarizer()
+		label_dt_matrix = binarizer.fit_transform([x.split(" ") for x in self.raw_Y])
 		label_counts = (label_dt_matrix.T * label_dt_matrix).todense()
 		self.label_cooccurrence = label_counts * 1./label_counts.diagonal()
 
@@ -136,30 +136,6 @@ def predStringToFile(pred_str, fn):
 		writer = csv.writer(f)
 		writer.writerow(["tags"])
 		writer.writerows([(p,) if p != "" else " " for p in pred_str])
-
-
-def score(predicted, actual):
-	'''Computes the generalized F1 score
-
-	Args:
-		predicted (list of str): list of predicted classes. Each prediction should be space separated string.
-		actual (list of str): list of true classes. Each should be space separated string.
-
-	Return:
-		float: generalized F1 score as defined in Indeed ML Hackathon (unscaled)
-
-	'''
-	predicted_list = [elem.split(" ") if elem != '' else [] for elem in predicted]
-	actual_list = [elem.split(" ") if elem != '' else [] for elem in actual]
-	pred_mat = MultiLabelBinarizer(classes = LABEL_LIST).fit_transform(predicted_list)
-	act_mat = MultiLabelBinarizer(classes = LABEL_LIST).fit_transform(actual_list)
-	TP = np.multiply(pred_mat, act_mat).sum()
-	FP = np.multiply(pred_mat, 1 - act_mat).sum()
-	FN = np.multiply(1 - pred_mat, act_mat).sum()
-	P = 1.*TP/(TP + FP)
-	R = 1.*TP/(TP + FN)
-	S = 2*P*R/(P + R)
-	return P, R, S
 
 
 def prunedProbMatrix(prob_matrix):
