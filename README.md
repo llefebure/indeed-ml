@@ -1,5 +1,5 @@
 # Indeed Machine Learning Competition
-This project details my approach to a multi-label classification problem posed as a competition by Indeed and HackerRank in which I placed in the 10th percentile of submissions. See [here](https://www.hackerrank.com/indeed-ml-codesprint-2017) for more details about the competition logistics. The competition itself spanned only one week, but I continued work following the close of submissions. The entirety of that work is presented here.
+This project details my approach to a multi-label classification problem posed as a competition by Indeed and HackerRank in which I placed 27th out of 248 entrants. See [here](https://www.hackerrank.com/indeed-ml-codesprint-2017) for more details about the competition logistics. The competition itself spanned only one week, but I continued work following the close of submissions. The entirety of that work is presented here.
 
 ## The Task
 The problem involves tagging job descriptions (unstructured text) with any number of a set of twelve labels such as "bs-degree-needed" and "hourly-wage". For a full description, see [here](https://www.hackerrank.com/contests/indeed-ml-codesprint-2017/challenges/tagging-raw-job-descriptions).
