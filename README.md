@@ -4,6 +4,13 @@ This project details my approach to a multi-label classification problem posed a
 ## The Task
 The problem involves tagging job descriptions (unstructured text) with any number of a set of twelve labels such as "bs-degree-needed" and "hourly-wage". For a full description, see [here](https://www.hackerrank.com/contests/indeed-ml-codesprint-2017/challenges/tagging-raw-job-descriptions).
 
+## Index of Files
+Below is a description of the various files in this repository.
+* **preprocessing.py**: This contains most of the data processing functionality (building document-term matrices, etc) as well as some helper functions like converting a label matrix to a list of strings and writing predictions to a file.
+* **exploratory.ipynb**: This notebook contains some exploratory analysis inlcuding label frequency and coocurrence and it generates some simple baseline predictions.
+* **models.ipynb**: This notebook implements SVM and Logistic Regression models.
+* **summary.pdf**: This report describes the initial work I did and was required as part of the submission for the contest.
+
 ## Initial Approach
 This section describes the work I did while the competition was live.
 
